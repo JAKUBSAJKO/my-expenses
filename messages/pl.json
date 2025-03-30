@@ -1,6 +1,26 @@
 {
+  "Nav": {
+    "home": "Strona główna",
+    "board": "Moje wydatki"
+  },
   "HomePage": {
     "title": "Witaj świecie!",
     "about": "Idź na stronę o nas"
+  },
+  "Board": {
+    "month": {
+      "january": "Styczeń",
+      "february": "Luty",
+      "march": "Marzec",
+      "april": "Kwiecień",
+      "may": "Maj",
+      "june": "Czerwiec",
+      "july": "Lipiec",
+      "august": "Sierpień",
+      "september": "Wrzesień",
+      "october": "Październik",
+      "november": "Listopad",
+      "december": "Grudzień"
+    }
   }
 }
