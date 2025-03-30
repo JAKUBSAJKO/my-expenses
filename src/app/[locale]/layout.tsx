@@ -1,3 +1,4 @@
+import Navbar from "@/components/Navbar";
 import { routing } from "@/i18n/routing";
 import type { Metadata } from "next";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
@@ -31,6 +32,7 @@ export default async function RootLayout({
     <html lang={locale}>
       <body className={`${montserrat.variable} antialiased`}>
         <NextIntlClientProvider>
+          <Navbar />
           <main>{children}</main>
         </NextIntlClientProvider>
       </body>

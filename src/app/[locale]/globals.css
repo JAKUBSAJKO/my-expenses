@@ -3,12 +3,6 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
 :root {
   font-family: var(--font-montserrat), sans-serif;
   --radius: 0.625rem;
