@@ -1,8 +1,14 @@
 "use client";
 
+import { Month } from "@/types";
+import { createClient } from "@/utils/supabase/client";
 import { useTranslations } from "next-intl";
+import { useEffect, useState } from "react";
 
 export default function Board() {
+  const [months, setMonths] = useState<Month[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
   const t = useTranslations("Board");
   const finalSortDataOnInit = [
     {
@@ -441,30 +447,33 @@ export default function Board() {
     },
   ];
 
-  const monthsTable = [
-    { id: 1, key: "january" },
-    { id: 2, key: "february" },
-    { id: 3, key: "march" },
-    { id: 4, key: "april" },
-    { id: 5, key: "may" },
-    { id: 6, key: "june" },
-    { id: 7, key: "july" },
-    { id: 8, key: "august" },
-    { id: 9, key: "september" },
-    { id: 10, key: "october" },
-    { id: 11, key: "november" },
-    { id: 12, key: "december" },
-  ];
+  useEffect(() => {
+    fetchMonths();
+  }, []);
+
+  const fetchMonths = async () => {
+    const supabase = await createClient();
+    const { data } = await supabase.from("months").select();
+
+    if (data) {
+      setMonths(data);
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div>
       <div className="grid grid-cols-[4fr_repeat(12,_1fr)] gap-4">
-        <div>{t("month.january")}</div>
-        {monthsTable.map((month) => (
-          <div key={month.id} className="text-center">
-            {t("month." + month.key)}
-          </div>
-        ))}
+        <div></div>
+        {isLoading ? (
+          <p>Loading...</p>
+        ) : (
+          months.map((month) => (
+            <div key={month.id} className="text-center">
+              {t("month." + month.key)}
+            </div>
+          ))
+        )}
       </div>
 
       <div>
