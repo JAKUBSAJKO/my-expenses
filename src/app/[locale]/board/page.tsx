@@ -1,15 +1,8 @@
 "use client";
 
-import { Month } from "@/types";
-import { createClient } from "@/utils/supabase/client";
-import { useTranslations } from "next-intl";
-import { useEffect, useState } from "react";
+import TableColumns from "./components/TableColumns/TableColumns";
 
 export default function Board() {
-  const [months, setMonths] = useState<Month[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-
-  const t = useTranslations("Board");
   const finalSortDataOnInit = [
     {
       id: 1,
@@ -447,34 +440,9 @@ export default function Board() {
     },
   ];
 
-  useEffect(() => {
-    fetchMonths();
-  }, []);
-
-  const fetchMonths = async () => {
-    const supabase = await createClient();
-    const { data } = await supabase.from("months").select();
-
-    if (data) {
-      setMonths(data);
-      setIsLoading(false);
-    }
-  };
-
   return (
-    <div>
-      <div className="grid grid-cols-[4fr_repeat(12,_1fr)] gap-4">
-        <div></div>
-        {isLoading ? (
-          <p>Loading...</p>
-        ) : (
-          months.map((month) => (
-            <div key={month.id} className="text-center">
-              {t("month." + month.key)}
-            </div>
-          ))
-        )}
-      </div>
+    <div className="px-4 pt-4">
+      <TableColumns />
 
       <div>
         {groupsTable.map((group) => (
@@ -483,41 +451,41 @@ export default function Board() {
       </div>
 
       {expensesTable.map((expense) => (
-        <div key={expense.id} className="grid grid-cols-[4fr_repeat(12,_1fr)] gap-4">
-          <div>{expense.name}</div>
-          <div>{expense.months.january.amount}</div>
-          <div>{expense.months.february.amount}</div>
-          <div>{expense.months.march.amount}</div>
-          <div>{expense.months.april.amount}</div>
-          <div>{expense.months.may.amount}</div>
-          <div>{expense.months.june.amount}</div>
-          <div>{expense.months.july.amount}</div>
-          <div>{expense.months.august.amount}</div>
-          <div>{expense.months.september.amount}</div>
-          <div>{expense.months.october.amount}</div>
-          <div>{expense.months.november.amount}</div>
-          <div>{expense.months.december.amount}</div>
+        <div key={expense.id} className="grid grid-cols-[4fr_repeat(12,_1fr)]">
+          <div className="">{expense.name}</div>
+          <div className="flex justify-end">{expense.months.january.amount}</div>
+          <div className="flex justify-end">{expense.months.february.amount}</div>
+          <div className="flex justify-end">{expense.months.march.amount}</div>
+          <div className="flex justify-end">{expense.months.april.amount}</div>
+          <div className="flex justify-end">{expense.months.may.amount}</div>
+          <div className="flex justify-end">{expense.months.june.amount}</div>
+          <div className="flex justify-end">{expense.months.july.amount}</div>
+          <div className="flex justify-end">{expense.months.august.amount}</div>
+          <div className="flex justify-end">{expense.months.september.amount}</div>
+          <div className="flex justify-end">{expense.months.october.amount}</div>
+          <div className="flex justify-end">{expense.months.november.amount}</div>
+          <div className="flex justify-end">{expense.months.december.amount}</div>
         </div>
       ))}
 
       {finalSortDataOnInit.map((group) => (
         <div key={group.id}>
-          <div className="bg-red-500">{group.groupName}</div>
+          <div className="bg-red-200">{group.groupName}</div>
           {group.expenses.map((expense) => (
-            <div key={expense.id} className="grid grid-cols-[4fr_repeat(12,_1fr)] gap-4">
+            <div key={expense.id} className="grid grid-cols-[4fr_repeat(12,_1fr)]">
               <div>{expense.name}</div>
-              <div>{expense.months.january.amount}</div>
-              <div>{expense.months.february.amount}</div>
-              <div>{expense.months.march.amount}</div>
-              <div>{expense.months.april.amount}</div>
-              <div>{expense.months.may.amount}</div>
-              <div>{expense.months.june.amount}</div>
-              <div>{expense.months.july.amount}</div>
-              <div>{expense.months.august.amount}</div>
-              <div>{expense.months.september.amount}</div>
-              <div>{expense.months.october.amount}</div>
-              <div>{expense.months.november.amount}</div>
-              <div>{expense.months.december.amount}</div>
+              <div className="flex justify-end">{expense.months.january.amount}</div>
+              <div className="flex justify-end">{expense.months.february.amount}</div>
+              <div className="flex justify-end">{expense.months.march.amount}</div>
+              <div className="flex justify-end">{expense.months.april.amount}</div>
+              <div className="flex justify-end">{expense.months.may.amount}</div>
+              <div className="flex justify-end">{expense.months.june.amount}</div>
+              <div className="flex justify-end">{expense.months.july.amount}</div>
+              <div className="flex justify-end">{expense.months.august.amount}</div>
+              <div className="flex justify-end">{expense.months.september.amount}</div>
+              <div className="flex justify-end">{expense.months.october.amount}</div>
+              <div className="flex justify-end">{expense.months.november.amount}</div>
+              <div className="flex justify-end">{expense.months.december.amount}</div>
             </div>
           ))}
         </div>
