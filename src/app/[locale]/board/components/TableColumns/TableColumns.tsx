@@ -1,3 +1,4 @@
+import { TABLES } from "@/constants";
 import { Month } from "@/types";
 import { createClient } from "@/utils/supabase/client";
 import { useTranslations } from "next-intl";
@@ -15,7 +16,7 @@ export default function TableColumns() {
 
   const fetchMonths = async () => {
     const supabase = await createClient();
-    const { data } = await supabase.from("months").select();
+    const { data } = await supabase.from(TABLES.months).select();
 
     if (data) {
       setMonths(data);

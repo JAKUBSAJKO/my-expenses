@@ -2,11 +2,23 @@
 
 import LanguageMenu from "@/components/LanguageMenu";
 import { routes } from "@/routes/routes";
+import { createClient } from "@/utils/supabase/client";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 
 export default function Navbar() {
   const t = useTranslations("Nav");
+
+  const logout = async () => {
+    const { error } = await createClient().auth.signOut();
+
+    if (error) {
+      console.error("Error signing out:", error.message);
+    }
+
+    const currentSession = await createClient().auth.getSession();
+    console.log(currentSession);
+  };
 
   return (
     <div className="w-full h-16 bg-teal-700 flex items-center justify-between px-16 text-white">
@@ -20,6 +32,7 @@ export default function Navbar() {
         </li>
       </ul>
       <div className="flex items-center gap-4">
+        <button onClick={logout}>Logout</button>
         <LanguageMenu />
         <div className="w-8 h-8 bg-white rounded-full"></div>
       </div>
