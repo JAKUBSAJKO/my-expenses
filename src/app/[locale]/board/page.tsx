@@ -8,12 +8,18 @@ import {
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useState } from "react";
+import { TABLES } from "@/constants";
+import { Group } from "@/types";
+import { createClient } from "@/utils/supabase/client";
+import { useEffect, useState } from "react";
 import TableColumns from "./components/TableColumns/TableColumns";
 
 export default function Board() {
   const years = ["2025", "2026", "2027", "2028", "2029", "2030"];
   const [selectedYear, setSelectedYear] = useState("2025");
+
+  const [groups, setGroups] = useState<Group[]>([]);
+
   const finalSortDataOnInit = [
     {
       id: 1,
@@ -236,10 +242,7 @@ export default function Board() {
       ],
     },
   ];
-  const groupsTable = [
-    { id: 1, name: "Fixed expenses" },
-    { id: 2, name: "New" },
-  ];
+
   const expensesTable = [
     {
       id: 1,
@@ -451,12 +454,48 @@ export default function Board() {
     },
   ];
 
+  const createNewGroup = async () => {
+    const { error, data } = await createClient().from(TABLES.groups).insert({
+      name: "New group",
+      created_by: "99583797-288e-4858-a3a3-09dd7c5429ec",
+    });
+
+    if (error) {
+      console.log("Error creating new group:", error);
+    } else {
+      console.log("New group created:", data);
+    }
+  };
+
+  useEffect(() => {
+    fetchGroups();
+  }, []);
+
+  const fetchGroups = async () => {
+    const { error, data } = await createClient()
+      .from(TABLES.groups)
+      .select("*");
+
+    if (error) {
+      console.log("Error fetching groups:", error);
+      return;
+    }
+
+    if (data) {
+      setGroups(data);
+    }
+  };
+
   return (
     <div className="flex flex-col gap-4">
       <div className="flex justify-between items-center p-4">
         <div className="flex items-center gap-2">
           <Button className="cursor-pointer">Add new expenses</Button>
-          <Button variant="outline" className="cursor-pointer">
+          <Button
+            variant="outline"
+            className="cursor-pointer"
+            onClick={createNewGroup}
+          >
             Add new group
           </Button>
         </div>
@@ -467,9 +506,16 @@ export default function Board() {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-24">
-            <DropdownMenuRadioGroup value={selectedYear} onValueChange={setSelectedYear}>
+            <DropdownMenuRadioGroup
+              value={selectedYear}
+              onValueChange={setSelectedYear}
+            >
               {years.map((year) => (
-                <DropdownMenuRadioItem key={year} value={year} className="cursor-pointer">
+                <DropdownMenuRadioItem
+                  key={year}
+                  value={year}
+                  className="cursor-pointer"
+                >
                   {year}
                 </DropdownMenuRadioItem>
               ))}
@@ -481,26 +527,49 @@ export default function Board() {
         <TableColumns />
 
         <div>
-          {groupsTable.map((group) => (
-            <div key={group.id}>{group.name}</div>
+          {groups.map((group) => (
+            <div key={group.id} className="bg-amber-200">
+              {group.name}
+            </div>
           ))}
         </div>
 
         {expensesTable.map((expense) => (
-          <div key={expense.id} className="grid grid-cols-[4fr_repeat(12,_1fr)]">
+          <div
+            key={expense.id}
+            className="grid grid-cols-[4fr_repeat(12,_1fr)]"
+          >
             <div className="">{expense.name}</div>
-            <div className="flex justify-end">{expense.months.january.amount}</div>
-            <div className="flex justify-end">{expense.months.february.amount}</div>
-            <div className="flex justify-end">{expense.months.march.amount}</div>
-            <div className="flex justify-end">{expense.months.april.amount}</div>
+            <div className="flex justify-end">
+              {expense.months.january.amount}
+            </div>
+            <div className="flex justify-end">
+              {expense.months.february.amount}
+            </div>
+            <div className="flex justify-end">
+              {expense.months.march.amount}
+            </div>
+            <div className="flex justify-end">
+              {expense.months.april.amount}
+            </div>
             <div className="flex justify-end">{expense.months.may.amount}</div>
             <div className="flex justify-end">{expense.months.june.amount}</div>
             <div className="flex justify-end">{expense.months.july.amount}</div>
-            <div className="flex justify-end">{expense.months.august.amount}</div>
-            <div className="flex justify-end">{expense.months.september.amount}</div>
-            <div className="flex justify-end">{expense.months.october.amount}</div>
-            <div className="flex justify-end">{expense.months.november.amount}</div>
-            <div className="flex justify-end">{expense.months.december.amount}</div>
+            <div className="flex justify-end">
+              {expense.months.august.amount}
+            </div>
+            <div className="flex justify-end">
+              {expense.months.september.amount}
+            </div>
+            <div className="flex justify-end">
+              {expense.months.october.amount}
+            </div>
+            <div className="flex justify-end">
+              {expense.months.november.amount}
+            </div>
+            <div className="flex justify-end">
+              {expense.months.december.amount}
+            </div>
           </div>
         ))}
 
@@ -508,20 +577,47 @@ export default function Board() {
           <div key={group.id}>
             <div className="bg-red-200">{group.groupName}</div>
             {group.expenses.map((expense) => (
-              <div key={expense.id} className="grid grid-cols-[4fr_repeat(12,_1fr)]">
+              <div
+                key={expense.id}
+                className="grid grid-cols-[4fr_repeat(12,_1fr)]"
+              >
                 <div>{expense.name}</div>
-                <div className="flex justify-end">{expense.months.january.amount}</div>
-                <div className="flex justify-end">{expense.months.february.amount}</div>
-                <div className="flex justify-end">{expense.months.march.amount}</div>
-                <div className="flex justify-end">{expense.months.april.amount}</div>
-                <div className="flex justify-end">{expense.months.may.amount}</div>
-                <div className="flex justify-end">{expense.months.june.amount}</div>
-                <div className="flex justify-end">{expense.months.july.amount}</div>
-                <div className="flex justify-end">{expense.months.august.amount}</div>
-                <div className="flex justify-end">{expense.months.september.amount}</div>
-                <div className="flex justify-end">{expense.months.october.amount}</div>
-                <div className="flex justify-end">{expense.months.november.amount}</div>
-                <div className="flex justify-end">{expense.months.december.amount}</div>
+                <div className="flex justify-end">
+                  {expense.months.january.amount}
+                </div>
+                <div className="flex justify-end">
+                  {expense.months.february.amount}
+                </div>
+                <div className="flex justify-end">
+                  {expense.months.march.amount}
+                </div>
+                <div className="flex justify-end">
+                  {expense.months.april.amount}
+                </div>
+                <div className="flex justify-end">
+                  {expense.months.may.amount}
+                </div>
+                <div className="flex justify-end">
+                  {expense.months.june.amount}
+                </div>
+                <div className="flex justify-end">
+                  {expense.months.july.amount}
+                </div>
+                <div className="flex justify-end">
+                  {expense.months.august.amount}
+                </div>
+                <div className="flex justify-end">
+                  {expense.months.september.amount}
+                </div>
+                <div className="flex justify-end">
+                  {expense.months.october.amount}
+                </div>
+                <div className="flex justify-end">
+                  {expense.months.november.amount}
+                </div>
+                <div className="flex justify-end">
+                  {expense.months.december.amount}
+                </div>
               </div>
             ))}
           </div>
