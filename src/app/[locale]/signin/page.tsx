@@ -1,14 +1,20 @@
 "use client";
 
+import { routes } from "@/routes/routes";
+import { useSessionStore } from "@/store/session";
 import { createClient } from "@/utils/supabase/client";
+import { redirect } from "next/navigation";
 import { FormEvent, useState } from "react";
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const { setSession, setUser, setLoading } = useSessionStore((state) => state);
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLoading(true);
 
     const { error, data } = await createClient().auth.signInWithPassword({
       email,
@@ -17,13 +23,18 @@ export default function SignIn() {
 
     if (error) {
       console.error("Error signing up:", error.message);
+      setLoading(false);
       return;
     }
 
-    console.log(data);
+    setSession(data.session);
+    setUser(data.user);
 
     setEmail("");
     setPassword("");
+
+    setLoading(false);
+    redirect(routes.board);
   };
 
   return (

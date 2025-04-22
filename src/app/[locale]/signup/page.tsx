@@ -1,6 +1,8 @@
 "use client";
 
+import { routes } from "@/routes/routes";
 import { createClient } from "@/utils/supabase/client";
+import { redirect } from "next/navigation";
 import { FormEvent, useState } from "react";
 
 export default function SignUp() {
@@ -22,6 +24,8 @@ export default function SignUp() {
 
     setEmail("");
     setPassword("");
+
+    redirect(routes.signin);
   };
 
   return (
